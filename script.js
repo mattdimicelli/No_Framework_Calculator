@@ -33,36 +33,61 @@ function divide(x, y) {
 function operate(x, y, operator) {
     switch (operator) {
         case '+':
-            add(x, y);
+            return add(x, y);
             break;
         case '-':
-            subtract(x, y);
+            return subtract(x, y);
             break;
         case '*':
-            multiply(x, y);
+            return multiply(x, y);
             break;
         case '/':
-            divide(x, y);
+            return divide(x, y);
             break;
     }
 }
+function calculate() {
+    console.log(values);
+    const lastValue = values[values.length - 1];
+    const secondLastValue = values[values.length - 2];
+    const thirdLastValue = values[values.length - 3];
+    const fourthLastValue = values[values.length -4];
+    const operators = ['-', '+', '*', '/'];
+    // if the last value is an operator which is preceded by number, operator, number (three items in a row), display the result
+    if (operators.includes(lastValue) && (typeof secondLastValue !== 'undefined') && (typeof thirdLastValue !== 'undefined') && (typeof fourthLastValue !== 'undefined')) {
+        const result = operate(Number(fourthLastValue), Number(secondLastValue), thirdLastValue);
+        resultStr = result.toString();
+        values = [resultStr, lastValue];  //the values arr only holds strs
+    }
+}
+function manageValues() {}
+
 function populateDisplay() {
     const displayDiv = document.querySelector('div.display');
-    console.log(values);
-    displayDiv.textContent = values[values.length - 1];
+    const operators = ['-', '+', '*', '/'];
+    let displayValue;
+    if(operators.includes(values[values.length - 1])) {  // if the last item in the values arr is an operator...
+        displayValue = roundTo7Places(values[values.length - 2]); // don't display the operator, only display a number
+    }
+    else displayValue = roundTo7Places(values[values.length -1]); 
+    displayDiv.textContent = displayValue;
+    
+    function roundTo7Places(x) {
+        return Math.round(x  * 10000000) / 10000000;
+    }
 }
+
 function handleNumber(x) {
-    console.log(x);
-    // if the last item in the values arr is a "number str", add the number to the str
+    // if the last item in the values arr is a "float str", add the number to the str
     const lastItemInValues = values[values.length - 1];
-    const numbersRegex = /[0-9]$/;
-    if (numbersRegex.test(lastItemInValues)) {
+    const floatRegex = /[0-9\.]$/;
+    if (floatRegex.test(lastItemInValues)) {
         // if the "number str" is too long, just return.  arbitrarly chose 10.
         // adjust to size of font in display as needed
         if(lastItemInValues.length === 10) return;
 
-        // if the only number in the str is a 0, replace that number
-        else if(lastItemInValues.slice(0, 1) === '0') {
+        // if there is only one char in the str which is a 0, replace that number
+        else if(lastItemInValues === '0') {
             values[values.length - 1] = x;
         }
 
@@ -70,10 +95,12 @@ function handleNumber(x) {
     }
 
     // if the last item in the values arr is a /, *, -, or +, push the number as a new str
-    const operatorRegex = /[+\-*/]$/;
-    if (numbersRegex.test(lastItemInValues)) {
+    const operatorRegex = /[+\-*\/]$/;
+    if (operatorRegex.test(lastItemInValues)) {
         values.push(x);
     }
+    while (values.length > 4) values.shift();
+    calculate();
     populateDisplay();
 }
 function handleOperator(operator) {
@@ -83,11 +110,13 @@ function handleOperator(operator) {
     if (numbersRegex.test(lastItemInValues)) {
         values.push(operator);
     }
-    // if the last item.... is a /, *, -, or +, replace that item
-    const operatorRegex = /[+\-*/]$/;
-    if (numbersRegex.test(lastItemInValues)) {
+    // if the last item.... is a / * - + or . replace that item
+    const operatorAndDecimalRegex = /[+\-*\/\.]$/;
+    if (operatorAndDecimalRegex.test(lastItemInValues)) {
         values[values.length - 1] = operator;
     }
+    while (values.length > 4) values.shift();
+    calculate();
     populateDisplay();
 }
 function handleDecimal() {
@@ -97,15 +126,24 @@ function handleDecimal() {
     if (numbersRegex.test(lastItemInValues)) {
         values[values.length - 1] += '.';
     }
-    // if the last item in the values arr is a /, *, -, or +, add '0.'
-    const operatorRegex = /[+\-*/]$/;
+    // if the last item in the values arr is a /, *, -, or +, push a new str to the arr that starts with '0.'
+    const operatorRegex = /[+\-*\/]$/;
     if (operatorRegex.test(lastItemInValues)) {
-        values[values.length - 1] += '0.';
+        values.push('0.');
     }
     // if the last item in the values arr is a decimal point, return
     const decimalRegex = /\.$/;
     if (decimalRegex.test(lastItemInValues)) return;
+    while (values.length > 4) values.shift();
+    calculate();
     populateDisplay();
+}
+function handleEquals() {
+    // if there's only a number in values, and it ends with a decimal point, 
+    // if there's only a nunmber in values, return
+    if (value.length === 1 && )
+    // if there's a number and an operator, return
+    // if there's a number, an operator, and another number, calculate and display;
 }
 
 
