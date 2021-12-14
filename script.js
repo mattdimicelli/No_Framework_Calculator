@@ -1,4 +1,23 @@
-let values = [];
+let values = ['0'];
+let buttons = document.querySelectorAll('button');
+for (let button of buttons) {
+    const buttonValue = button.dataset.value;
+    const numbers = ['0','1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    const operators = ['+', '-', '*', '/'];
+    if (numbers.includes(buttonValue)) {
+        button.addEventListener('click', function() {
+            handleNumber(buttonValue);
+        });
+    }
+    else if (buttonValue === '.') {
+        button.addEventListener('click', handleDecimal);
+    }
+    else if (operators.includes(buttonValue)) {
+        button.addEventListener('click', function() {
+            handleOperator(buttonValue);
+        })
+    } 
+}
 function add(x, y) {
     return x + y;
 }
@@ -27,12 +46,13 @@ function operate(x, y, operator) {
             break;
     }
 }
-function populateDisplay(chars) {
-    displayValue += char;
+function populateDisplay() {
     const displayDiv = document.querySelector('div.display');
-    displayDiv.textContent = displayValue;
+    console.log(values);
+    displayDiv.textContent = values[values.length - 1];
 }
 function handleNumber(x) {
+    console.log(x);
     // if the last item in the values arr is a "number str", add the number to the str
     const lastItemInValues = values[values.length - 1];
     const numbersRegex = /[0-9]$/;
@@ -41,9 +61,12 @@ function handleNumber(x) {
         // adjust to size of font in display as needed
         if(lastItemInValues.length === 10) return;
 
-        // if the only number in the str is a 0, also return
-        if(lastItemInValues.slice(0, 1) === '0') return;
-        lastItemInValues += x;
+        // if the only number in the str is a 0, replace that number
+        else if(lastItemInValues.slice(0, 1) === '0') {
+            values[values.length - 1] = x;
+        }
+
+        else values[values.length - 1] += x;
     }
 
     // if the last item in the values arr is a /, *, -, or +, push the number as a new str
@@ -51,6 +74,7 @@ function handleNumber(x) {
     if (numbersRegex.test(lastItemInValues)) {
         values.push(x);
     }
+    populateDisplay();
 }
 function handleOperator(operator) {
     // if the last item in the values is a "number str", push the operator as a new str
@@ -64,14 +88,24 @@ function handleOperator(operator) {
     if (numbersRegex.test(lastItemInValues)) {
         values[values.length - 1] = operator;
     }
+    populateDisplay();
 }
 function handleDecimal() {
     // if the last item in the values arr is a "number str", add the decimal to the str
     const lastItemInValues = values[values.length - 1];
     const numbersRegex = /[0-9]$/;
     if (numbersRegex.test(lastItemInValues)) {
-        
-
+        values[values.length - 1] += '.';
+    }
+    // if the last item in the values arr is a /, *, -, or +, add '0.'
+    const operatorRegex = /[+\-*/]$/;
+    if (operatorRegex.test(lastItemInValues)) {
+        values[values.length - 1] += '0.';
+    }
+    // if the last item in the values arr is a decimal point, return
+    const decimalRegex = /\.$/;
+    if (decimalRegex.test(lastItemInValues)) return;
+    populateDisplay();
 }
 
 
@@ -85,7 +119,7 @@ function handleDecimal() {
     // add numbers to 
     // if the display size is filled up, return
 
-}
+
 
 
 
