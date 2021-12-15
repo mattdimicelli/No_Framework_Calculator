@@ -101,6 +101,25 @@ function handleNumber(x) {
         modify(2, x);         
         populateDisplay(arg2);                                              
     }
+    
+    console.log(arg1, arg2, operator);
+
+    function modify(operand, value) {
+        if (operand === 1) {
+            /* if arg1 is already 10 chars long, do nothing (to avoid storing
+            numbers that are too long) */
+            if(arg1.length === 10) return;
+            else if(arg1 === '0') arg1 = value;
+            else arg1 += value; 
+        }
+        else if (operand === 2) {
+            /* if arg2 is already 10 chars long, do nothing (to avoid storing
+            numbers that are too long) */
+            if(arg2.length === 10) return;
+            else if(arg2 === '0') arg2 = value;
+            else arg2 += value;
+        }
+    }
 }
     
     // if (typeof arg1 === 'undefined') {
@@ -122,25 +141,9 @@ function handleNumber(x) {
     //         populateDisplay(arg2);
     //     }
     // }
-    console.log(arg1, arg2, operator);
 
-    function modify(operand, value) {
-        if (operand === 1) {
-            /* if arg1 is already 10 chars long, do nothing (to avoid storing
-            numbers that are too long) */
-            if(arg1.length === 10) return;
-            else if(arg1 === '0') arg1 = value;
-            else arg1 += value; 
-        }
-        else if (operand === 2) {
-            /* if arg2 is already 10 chars long, do nothing (to avoid storing
-            numbers that are too long) */
-            if(arg2.length === 10) return;
-            else if(arg2 === '0') arg2 = value;
-            else arg2 += value;
-        }
-    }
-}
+    
+
 
 function handleOperator(newOp) {
     if (typeof arg1 === 'undefined') {
@@ -253,17 +256,32 @@ function handleDecimal() {
 
 
 function handleEquals() {
-
-
-    // if the last item in the items arr is a number
-    if (numbersRegex.test(lastItem)) {
-        calculateIfAppropriate();
-        populateDisplay();
+    if (typeof arg1 === 'undefined') {
+        return;
     }
+    else if (typeof operator === 'undefined') {
+        /* continue to show the entered number on the screen, but delete arg1
+        so that user can "start from the beginning" */
+        arg1 = undefined;
+    }
+    else if (typeof arg2 === 'undefined') {
+        /* if there is one number in the equation and the user has already 
+        entered an operator, but then hits the equals button, perform the operation
+        using the same number for arg2 as for arg1.  Ex '5 * ='   =>   '5 * 5'   . */
+        arg2 = arg1;
+        result = calculate();
+        populateDisplay(result);
+        arg1 = result;
+    }
+    else {
+        result = calculate();
+        populateDisplay(result);
+        operator = undefined;
+        arg1 = undefined;
+        arg2 = undefined;
+    }
+    console.log(arg1, arg2, operator)
 
-    /* if the last item is just a decimal point or is an operator, do nothing 
-    (because you can't calculate this) */
-    if (lastItem === '.' || operatorRegex.test(lastItem)) return;
 }
 
 
