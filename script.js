@@ -1,5 +1,14 @@
-let values = ['0'];
+let arg1;
+let arg2;
+let operator;
+let result;
 let buttons = document.querySelectorAll('button');
+const integerPointRegex = /[0-9\.]$/;
+const operatorRegex = /^[+\-\*\/]$/;
+const integerRegex = /^[0-9]+$/;
+const numbersRegex = /^([0-9]+\.?[0-9]*|\.[0-9]+)$/;
+const endsWithDecimalRegex = /\.$/;
+
 for (let button of buttons) {
     const buttonValue = button.dataset.value;
     const numbers = ['0','1', '2', '3', '4', '5', '6', '7', '8', '9'];
@@ -50,29 +59,13 @@ function operate(x, y, operator) {
     }
 }
 function calculate() {
-    console.log(values);
-    const lastValue = values[values.length - 1];
-    const secondLastValue = values[values.length - 2];
-    const thirdLastValue = values[values.length - 3];
-    const fourthLastValue = values[values.length -4];
-    const operators = ['-', '+', '*', '/'];
-    // if the last value is an operator which is preceded by number, operator, number (three items in a row), display the result
-    if (operators.includes(lastValue) && (typeof secondLastValue !== 'undefined') && (typeof thirdLastValue !== 'undefined') && (typeof fourthLastValue !== 'undefined')) {
-        const result = operate(Number(fourthLastValue), Number(secondLastValue), thirdLastValue);
-        resultStr = result.toString();
-        values = [resultStr, lastValue];  
-    }
+   let result = operate(+arg1, +arg2, operator);
+   return result.toString();
 }
 
-function populateDisplay() {
+function populateDisplay(value) {
     const displayDiv = document.querySelector('div.display');
-    const operators = ['-', '+', '*', '/'];
-    let displayValue;
-    if(operators.includes(values[values.length - 1])) {  // if the last item in the values arr is an operator...
-        displayValue = formatToMax10Chars(values[values.length - 2]); // don't display the operator, only display a number
-    }
-    else displayValue = formatToMax10Chars(values[values.length -1]); 
-    displayDiv.textContent = displayValue;
+    displayDiv.textContent = formatToMax10Chars(value);
     
     function formatToMax10Chars(str) {
         if (str.length > 10 && ((Number(str) > 1e9))) {
@@ -92,104 +85,185 @@ function populateDisplay() {
 }
 
 function handleNumber(x) {
-    // if the last item in the values arr ends with a number followed by a decimal point, concatenate onto that item
-    const lastItemInValues = values[values.length - 1];
-    const floatRegex = /[0-9\.]$/;
-    if (floatRegex.test(lastItemInValues)) {
-        // if the last item is too long, just return.  arbitrarly chose 10.
-        // adjust to size of font in display as needed
-        if(lastItemInValues.length === 10) return;
+    if (typeof arg1 === 'undefined') {
+        arg1 = x;
+        populateDisplay(arg1);
+    }
+    else if (typeof operator === 'undefined') {
+        modify(1, x);
+        populateDisplay(arg1);
+    }
+    else if (typeof arg2 === 'undefined') {
+        arg2 = x;
+        populateDisplay(arg2);
+    }
+    else {
+        modify(2, x);         
+        populateDisplay(arg2);                                              
+    }
+}
+    
+    // if (typeof arg1 === 'undefined') {
+    //     arg1 = x;
+    //     populateDisplay(arg1);
+    // }
+    // else {
+    //     if (typeof operator === 'undefined') {
+    //         modify(1, x);
+    //         populateDisplay(arg1);
+    //     }
+    //     else {
+    //         if (typeof arg2 === 'undefined') {
+    //             arg2 = x;
+    //         }
+    //         else {
+    //             modify(2, x);                                                       
+    //         }
+    //         populateDisplay(arg2);
+    //     }
+    // }
+    console.log(arg1, arg2, operator);
 
-        // if there is only one char in the str which is a 0, replace that number
-        else if(lastItemInValues === '0') {
-            values[values.length - 1] = x;
+    function modify(operand, value) {
+        if (operand === 1) {
+            /* if arg1 is already 10 chars long, do nothing (to avoid storing
+            numbers that are too long) */
+            if(arg1.length === 10) return;
+            else if(arg1 === '0') arg1 = value;
+            else arg1 += value; 
         }
-
-        else values[values.length - 1] += x;
+        else if (operand === 2) {
+            /* if arg2 is already 10 chars long, do nothing (to avoid storing
+            numbers that are too long) */
+            if(arg2.length === 10) return;
+            else if(arg2 === '0') arg2 = value;
+            else arg2 += value;
+        }
     }
-
-    // if the last item in the values arr is a /, *, -, or +, push the number as a new str
-    const operatorRegex = /[+\-*\/]$/;
-    if (operatorRegex.test(lastItemInValues)) {
-        values.push(x);
-    }
-    while (values.length > 4) values.shift();
-    calculate();
-    populateDisplay();
 }
-function handleOperator(operator) {
-    // if the last item in the values is a "number str", push the operator as a new str
-    const lastItemInValues = values[values.length - 1];
-    const numbersRegex = /[0-9\.]$/;
-    if (numbersRegex.test(lastItemInValues)) {
-        values.push(operator);
+
+function handleOperator(newOp) {
+    if (typeof arg1 === 'undefined') {
+        // an operator can't do anything by itself, it needs an operand
+        return;
     }
-    // if the last item.... is a / * - + replace that item
-    const operatorAndDecimalRegex = /[+\-*\/]$/;
-    if (operatorAndDecimalRegex.test(lastItemInValues)) {
-        values[values.length - 1] = operator;
+    else if (typeof arg2 === 'undefined') {
+        /* the operator in memory will be overwritten by newOp (if the user
+        had previously input an operator), or it will be "initialized" by 
+        newOp (if the user hadn't yet selected on of the operators for the
+        equation) */
+        operator = newOp;
     }
-    while (values.length > 4) values.shift();
-    calculate();
-    populateDisplay();
+    else {
+        // there is an arg2 already defined
+        result = calculate();
+        populateDisplay(result);
+        operator = newOp;
+        arg1 = result;
+        arg2 = undefined;
+    }
+
+    console.log(arg1, arg2, operator)
+    // if (typeof arg1 === 'undefined') {
+    //     // an operator can't do anything by itself, it needs an operand
+    //     return;
+    // }
+    // else {
+    //     if (typeof arg2 === 'undefined') {
+    //         /* the operator in memory will be overwritten by newOp (if the user
+    //         had previously input an operator), or it will be "initialized" by 
+    //         newOp (if the user hadn't yet selected on of the operators for the
+    //         equation) */
+    //         operator = newOp;
+    //     }
+    //     else {
+    //         // there is an arg2 already defined
+    //         result = calculate();
+    //         populateDisplay(result);
+    //         operator = newOp;
+    //         arg1 = result;
+    //         arg2 = undefined;
+    //     }
+    // }
+    // console.log(arg1, arg2, operator)
 }
+
 function handleDecimal() {
-    // if the last item in the values arr is a "number str", add the decimal to the str
-    const lastItemInValues = values[values.length - 1];
-    const numbersRegex = /[0-9]$/;
-    if (numbersRegex.test(lastItemInValues)) {
-        values[values.length - 1] += '.';
+    if (typeof arg1 === 'undefined') {
+        arg1 = '.';
+        populateDisplay(arg1);
     }
-    // if the last item in the values arr is a /, *, -, or +, push a new str to the arr that starts with '0.'
-    const operatorRegex = /[+\-*\/]$/;
-    if (operatorRegex.test(lastItemInValues)) {
-        values.push('0.');
+    else if (typeof operator === 'undefined') {
+        if (arg1.includes('.') || (arg1.length >= 9)) {
+            /* if arg1 is already 9 chars long, there is no room for 
+            a decimal point and another digit, so don't do anything.  Also,
+            if arg1 already has a decimal point, it can't accept another */
+            return;
+        }
+        arg1 += '.';
+        populateDisplay(arg1); 
     }
-    // if the last item in the values arr is a decimal point, return
-    const decimalRegex = /\.$/;
-    if (decimalRegex.test(lastItemInValues)) return;
-    while (values.length > 4) values.shift();
-    calculate();
-    populateDisplay();
-}
+    else if (typeof arg2 === 'undefined') {
+        arg2 = '.';
+        populateDisplay(arg2);
+    }
+    else if (arg2.includes('.') || (arg2.length >= 9)) {
+        return;
+    }
+    else {
+        arg2 += '.';
+        populateDisplay(arg2);
+    }
+} 
+
+    
+    // if (typeof arg1 === 'undefined') {
+    //     arg1 = '.';
+    //     populateDisplay(arg1);
+    // }
+    // else {
+    //     if (typeof operator === 'undefined') {
+    //        if (arg1.includes('.') || (arg1.length >= 9)) {
+    //            /* if arg1 is already 9 chars long, there is no room for 
+    //             a decimal point and another digit, so don't do anything.  Also,
+    //             if arg1 already has a decimal point, it can't accept another */
+    //            return;
+    //        }
+    //        else {
+    //            arg1 += '.';
+    //            populateDisplay(arg1);
+    //        } 
+    //     }
+    //     else {
+    //         if (typeof arg2 === 'undefined') {
+    //             arg2 = '.';
+    //             populateDisplay(arg2);
+    //         }
+    //         else {
+    //             if (arg2.includes('.') || (arg2.length >= 9)) {
+    //                 return;
+    //             }
+    //             else {
+    //                 arg2 += '.';
+    //                 populateDisplay(arg2);
+    //             }
+    //         } 
+    //     }
+    // }
+
+
 function handleEquals() {
-    const lastItemInValues = values[values.length - 1];
 
-    // if the last item in the values arr is an integer, calculate and display
-    const integerRegex = /[0-9]+/;
-    if (integerRegex.test(lastItemInValues)) {
-        calculate();
+
+    // if the last item in the items arr is a number
+    if (numbersRegex.test(lastItem)) {
+        calculateIfAppropriate();
         populateDisplay();
     }
 
-    // if the last item in the values arr is an integer followed by a point, calculate and display
-    const integerThenPointRegex = /[0-9]+\.]$/;
-    if (integerThenPointRegex.test(lastItemInValues)) {
-        calculate();
-        populateDisplay();
-    }
-
-    // if the last item in teh values arr is just a decimal point, add a zero before the point, then calculate and display
-    if (lastItemInValues === '.') {
-        values[values.length - 1] = '0.';
-        calculate();
-        display();
-    }
-    // if the last item in the values arr is a float, calculate and display
-    const floatRegex = /[0-9]*\.[0-9]+$/;
-    if (floatRegex.test(lastItemInValues)) {
-        console.log('fire');
-        calculate();
-        populateDisplay();
-    }
-
-    // if the last item in the values arr is an operator, just get rid of that last operator
-    const operatorRegex = /[+\-*\/]$/;
-    if (operatorRegex.test(lastItemInValues)) {
-        values.pop();
-        calculate();
-        display();
-    }
+    /* if the last item is just a decimal point or is an operator, do nothing 
+    (because you can't calculate this) */
+    if (lastItem === '.' || operatorRegex.test(lastItem)) return;
 }
 
 
