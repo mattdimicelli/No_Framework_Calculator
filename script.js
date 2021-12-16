@@ -2,6 +2,8 @@ let arg1;
 let arg2;
 let operator;
 let result;
+let repeatWithSameArgAndOperator;
+let repeatValue;
 let buttons = document.querySelectorAll('button');
 const integerPointRegex = /[0-9\.]$/;
 const operatorRegex = /^[+\-\*\/]$/;
@@ -59,7 +61,9 @@ function operate(x, y, operator) {
     }
 }
 function calculate() {
-   let result = operate(+arg1, +arg2, operator);
+   let result;
+   if (repeatValue) result = operate(+arg1, +repeatValue, operator);
+   else result = operate(+arg1, +arg2, operator);
    return result.toString();
 }
 
@@ -85,6 +89,7 @@ function populateDisplay(value) {
 }
 
 function handleNumber(x) {
+    result = undefined;
     if (typeof arg1 === 'undefined') {
         arg1 = x;
         populateDisplay(arg1);
@@ -102,7 +107,7 @@ function handleNumber(x) {
         populateDisplay(arg2);                                              
     }
     
-    console.log(arg1, arg2, operator);
+    console.log({arg1, arg2, operator, result, repeatWithSameArgAndOperator, repeatValue});
 
     function modify(operand, value) {
         if (operand === 1) {
@@ -146,6 +151,11 @@ function handleNumber(x) {
 
 
 function handleOperator(newOp) {
+    if (typeof result !== 'undefined') {  //new
+        arg1 = result;
+        result = undefined;
+        operator = newOp;
+    }
     if (typeof arg1 === 'undefined') {
         // an operator can't do anything by itself, it needs an operand
         return;
@@ -166,7 +176,7 @@ function handleOperator(newOp) {
         arg2 = undefined;
     }
 
-    console.log(arg1, arg2, operator)
+    console.log({arg1, arg2, operator, result, repeatWithSameArgAndOperator, repeatValue});
     // if (typeof arg1 === 'undefined') {
     //     // an operator can't do anything by itself, it needs an operand
     //     return;
@@ -256,22 +266,45 @@ function handleDecimal() {
 
 
 function handleEquals() {
+    
     if (typeof arg1 === 'undefined') {
+        repeatWithSameArgAndOperator = false;
+        repeatValue = undefined;
         return;
     }
     else if (typeof operator === 'undefined') {
         /* continue to show the entered number on the screen, but delete arg1
         so that user can "start from the beginning" */
         arg1 = undefined;
+        repeatWithSameArgAndOperator = false;
+        repeatValue = undefined;
     }
     else if (typeof arg2 === 'undefined') {
         /* if there is one number in the equation and the user has already 
         entered an operator, but then hits the equals button, perform the operation
-        using the same number for arg2 as for arg1.  Ex '5 * ='   =>   '5 * 5'   . */
-        arg2 = arg1;
-        result = calculate();
-        populateDisplay(result);
-        arg1 = result;
+        using the same number for arg2 as for arg1.  Ex: User hits "5", then "+",
+        followed by "=".  The calculator will perform 5 + 5 and show the result.
+        If the user presses equals again, the calculator will add 5 to the result 
+        of the previous equation, and it will show 15.  User presses equals again,
+        will show 20.  Etc, etc.  
+         */
+        if (!repeatWithSameArgAndOperator) {
+            repeatValue = arg1;
+            result = calculate();
+            populateDisplay(result);
+            arg1 = result;
+            repeatWithSameArgAndOperator = true;
+            /* this flag will set the calculator to be in "repeat mode", which 
+            performs the action described in the above comment every time the
+            equals button is pressed, until the user breaks the pattern of repeatedly
+            pressings equals, at which point the flag will be set to false, and
+            the calculator will no longer be in "repeat mode" */
+        }
+        else if (repeatWithSameArgAndOperator) {
+            result = calculate();
+            populateDisplay(result);
+            arg1 = result;
+        }
     }
     else {
         result = calculate();
@@ -279,8 +312,10 @@ function handleEquals() {
         operator = undefined;
         arg1 = undefined;
         arg2 = undefined;
+        repeatValue = false;
+        repeatValue = undefined;
     }
-    console.log(arg1, arg2, operator)
+    console.log({arg1, arg2, operator, result, repeatWithSameArgAndOperator, repeatValue});
 
 }
 
