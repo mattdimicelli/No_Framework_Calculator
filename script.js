@@ -6,6 +6,7 @@ let operator;
 let result;
 let repeatWithSameArgAndOperator;
 let repeatValue;
+let lastBtnPressWasNumberOrDecimalPoint = true;
 
 initializeApplication();
 
@@ -34,6 +35,7 @@ function initializeApplication() {
             else if (btnValue === '.') btn.addEventListener('click', handleDecimal);
             else if (btnValue === '=') btn.addEventListener('click', handleEquals);
             else if (btnValue === 'AC') btn.addEventListener('click', handleClear);
+            else if (btnValue === 'Backspace') btn.addEventListener('click', handleBackspace);
         }
     }
 
@@ -116,6 +118,8 @@ function populateDisplay(value) {
 }
 
 function handleNumber(x) {
+    lastBtnPressWasNumberOrDecimalPoint = true;
+
     result = undefined;
     if (typeof arg1 === 'undefined') {
         arg1 = x;
@@ -155,6 +159,8 @@ function handleNumber(x) {
 }
 
 function handleOperator(newOp) {
+    lastBtnPressWasNumberOrDecimalPoint = false;
+
     if (typeof result !== 'undefined') {  
         arg1 = result;
         result = undefined;
@@ -184,6 +190,7 @@ function handleOperator(newOp) {
 }
 
 function handleDecimal() {
+    lastBtnPressWasNumberOrDecimalPoint = true;
     if (typeof arg1 === 'undefined') {
         arg1 = '.';
         populateDisplay(arg1);
@@ -212,7 +219,8 @@ function handleDecimal() {
 } 
 
 function handleEquals() {
-    
+    lastBtnPressWasNumberOrDecimalPoint = false;
+
     if (typeof arg1 === 'undefined') {
         repeatWithSameArgAndOperator = false;
         repeatValue = undefined;
@@ -265,6 +273,8 @@ function handleEquals() {
 }
 
 function handleClear() {
+    lastBtnPressWasNumberOrDecimalPoint = false;
+
     arg2 = undefined;
     operator = undefined;
     result = undefined;
@@ -273,8 +283,34 @@ function handleClear() {
 
     arg1 = '0';
     populateDisplay(arg1);
+
 }
 
+function handleBackspace(){
+    if (lastBtnPressWasNumberOrDecimalPoint) {
+        if (typeof arg2 !== 'undefined') {
+            if (arg2.length > 1) {
+                arg2 = arg2.slice(0, (arg2.length - 1));
+                populateDisplay(arg2);
+            }
+            else {
+                arg2 = undefined;
+                populateDisplay('');
+            }
+        }
+        else if (typeof arg1 !== "undefined") {
+            if (arg1.length > 1) {
+                arg1 = arg1.slice(0, (arg1.length - 1));
+                populateDisplay(arg1);
+            }
+            else {
+                arg1 = undefined;
+                populateDisplay('');
+            }
+        }
+    }
+    else return;
+}
 
     
 
