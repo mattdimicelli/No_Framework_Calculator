@@ -1,66 +1,94 @@
+'use strict';
+
 let arg1 = '0';
 let arg2;
 let operator;
 let result;
 let repeatWithSameArgAndOperator;
 let repeatValue;
-let btns = document.querySelectorAll('button');
 
-for (let btn of btns) {
-    const btnValue = btn.dataset.value;
-    const numbers = ['0','1', '2', '3', '4', '5', '6', '7', '8', '9'];
-    const operators = ['+', '-', '*', '/'];
-    if (numbers.includes(btnValue)) {
-        btn.addEventListener('click', function() {
-            handleNumber(btnValue);
-        });
+initializeApplication();
+
+function initializeApplication() {
+    let btns = Array.from(document.querySelectorAll('button'));
+    addClickEventListenersToButtons();
+    populateDisplay(arg1);
+    document.addEventListener('keydown', keydownHandler);
+
+    function addClickEventListenersToButtons() {
+
+        for (let btn of btns) {
+            const btnValue = btn.dataset.value;
+            const numbers = ['0','1', '2', '3', '4', '5', '6', '7', '8', '9'];
+            const operators = ['+', '-', '*', '/'];
+            if (numbers.includes(btnValue)) {
+                btn.addEventListener('click', function() {
+                    handleNumber(btnValue);
+                });
+            }
+            else if (operators.includes(btnValue)) {
+                btn.addEventListener('click', function() {
+                    handleOperator(btnValue);
+                })
+            }
+            else if (btnValue === '.') btn.addEventListener('click', handleDecimal);
+            else if (btnValue === '=') btn.addEventListener('click', handleEquals);
+            else if (btnValue === 'AC') btn.addEventListener('click', handleClear);
+        }
     }
-    else if (operators.includes(btnValue)) {
-        btn.addEventListener('click', function() {
-            handleOperator(btnValue);
-        })
-    }
-    else if (btnValue === '.') btn.addEventListener('click', handleDecimal);
-    else if (btnValue === '=') btn.addEventListener('click', handleEquals);
-    else if (btnValue === 'AC') btn.addEventListener('click', handleClear);
-}
 
-populateDisplay(arg1);
-
-function add(x, y) {
-    return x + y;
-}
-function subtract(x, y) {
-    return x-y;
-}
-function multiply(x, y) {
-    return x * y;
-}
-function divide(x, y) {
-    return x / y;
-}
-function operate(x, y, operator) {
-    switch (operator) {
-        case '+':
-            return add(x, y);
-            break;
-        case '-':
-            return subtract(x, y);
-            break;
-        case '*':
-            return multiply(x, y);
-            break;
-        case '/':
-            return divide(x, y);
-            break;
+    function keydownHandler(e) {
+        const key = e.key;
+        if (key === 'Escape' || key === 'Delete') {
+            let clearBtn = btns.find(btn => btn.dataset.value === 'AC');
+            clearBtn.click();
+        }
+        else if (key === 'Enter') {
+            let equalsBtn = btns.find(btn => btn.dataset.value === '=');
+            equalsBtn.click();
+        }
+        else {
+            const correspondingBtn = btns.find(btn => btn.dataset.value === key);
+            if (correspondingBtn) correspondingBtn.click();
+        }
     }
 }
+
 function calculate() {
    let result;
    if (operator === '/' && arg2 === '0') result = 'EXPLODES';
    else if (repeatValue) result = operate(+arg1, +repeatValue, operator);
    else result = operate(+arg1, +arg2, operator);
    return result.toString();
+
+   function operate(x, y, operator) {
+        switch (operator) {
+            case '+':
+                return add(x, y);
+                break;
+            case '-':
+                return subtract(x, y);
+                break;
+            case '*':
+                return multiply(x, y);
+                break;
+            case '/':
+                return divide(x, y);
+                break;
+        }
+        function add(x, y) {
+            return x + y;
+        }
+        function subtract(x, y) {
+            return x-y;
+        }
+        function multiply(x, y) {
+            return x * y;
+        }
+        function divide(x, y) {
+            return x / y;
+        }
+    }
 }
 
 function populateDisplay(value) {
@@ -237,7 +265,6 @@ function handleEquals() {
 }
 
 function handleClear() {
-    console.log('fire');
     arg2 = undefined;
     operator = undefined;
     result = undefined;
@@ -247,7 +274,6 @@ function handleClear() {
     arg1 = '0';
     populateDisplay(arg1);
 }
-
 
 
     
