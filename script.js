@@ -4,34 +4,27 @@ let operator;
 let result;
 let repeatWithSameArgAndOperator;
 let repeatValue;
-let buttons = document.querySelectorAll('button');
-const integerPointRegex = /[0-9\.]$/;
-const operatorRegex = /^[+\-\*\/]$/;
-const integerRegex = /^[0-9]+$/;
-const numbersRegex = /^([0-9]+\.?[0-9]*|\.[0-9]+)$/;
-const endsWithDecimalRegex = /\.$/;
+let btns = document.querySelectorAll('button');
 
-for (let button of buttons) {
-    const buttonValue = button.dataset.value;
+for (let btn of btns) {
+    const btnValue = btn.dataset.value;
     const numbers = ['0','1', '2', '3', '4', '5', '6', '7', '8', '9'];
     const operators = ['+', '-', '*', '/'];
-    if (numbers.includes(buttonValue)) {
-        button.addEventListener('click', function() {
-            handleNumber(buttonValue);
+    if (numbers.includes(btnValue)) {
+        btn.addEventListener('click', function() {
+            handleNumber(btnValue);
         });
     }
-    else if (buttonValue === '.') {
-        button.addEventListener('click', handleDecimal);
-    }
-    else if (operators.includes(buttonValue)) {
-        button.addEventListener('click', function() {
-            handleOperator(buttonValue);
+    else if (operators.includes(btnValue)) {
+        btn.addEventListener('click', function() {
+            handleOperator(btnValue);
         })
     }
-    else if (buttonValue === '=') {
-        button.addEventListener('click', handleEquals);
-    } 
+    else if (btnValue === '.') btn.addEventListener('click', handleDecimal);
+    else if (btnValue === '=') btn.addEventListener('click', handleEquals);
+    else if (btnValue === 'AC') btn.addEventListener('click', handleClear);
 }
+
 function add(x, y) {
     return x + y;
 }
@@ -62,7 +55,8 @@ function operate(x, y, operator) {
 }
 function calculate() {
    let result;
-   if (repeatValue) result = operate(+arg1, +repeatValue, operator);
+   if (operator === '/' && arg2 === '0') result = 'EXPLODES';
+   else if (repeatValue) result = operate(+arg1, +repeatValue, operator);
    else result = operate(+arg1, +arg2, operator);
    return result.toString();
 }
@@ -74,7 +68,10 @@ function populateDisplay(value) {
     function formatToMax10Chars(str) {
         if (str.length > 10 && ((Number(str) > 1e9))) {
             // if the number is huge, display it in scientific notation
-            str = Number(str).toExponential();
+            str = Number(str).toExponential(4);
+            /* the scientific notation will show only 4 digits after the decimal
+            point, so that at the most, the result (string) will be a max of ten
+            characters long, such as 9999999999 * 9999999999 = '1.0000e+20' */
         }
         else if (str.length > 10) {
             // else, if the string is too long b/c the number has too many decimal
@@ -126,29 +123,6 @@ function handleNumber(x) {
         }
     }
 }
-    
-    // if (typeof arg1 === 'undefined') {
-    //     arg1 = x;
-    //     populateDisplay(arg1);
-    // }
-    // else {
-    //     if (typeof operator === 'undefined') {
-    //         modify(1, x);
-    //         populateDisplay(arg1);
-    //     }
-    //     else {
-    //         if (typeof arg2 === 'undefined') {
-    //             arg2 = x;
-    //         }
-    //         else {
-    //             modify(2, x);                                                       
-    //         }
-    //         populateDisplay(arg2);
-    //     }
-    // }
-
-    
-
 
 function handleOperator(newOp) {
     if (typeof result !== 'undefined') {  //new
@@ -177,28 +151,6 @@ function handleOperator(newOp) {
     }
 
     console.log({arg1, arg2, operator, result, repeatWithSameArgAndOperator, repeatValue});
-    // if (typeof arg1 === 'undefined') {
-    //     // an operator can't do anything by itself, it needs an operand
-    //     return;
-    // }
-    // else {
-    //     if (typeof arg2 === 'undefined') {
-    //         /* the operator in memory will be overwritten by newOp (if the user
-    //         had previously input an operator), or it will be "initialized" by 
-    //         newOp (if the user hadn't yet selected on of the operators for the
-    //         equation) */
-    //         operator = newOp;
-    //     }
-    //     else {
-    //         // there is an arg2 already defined
-    //         result = calculate();
-    //         populateDisplay(result);
-    //         operator = newOp;
-    //         arg1 = result;
-    //         arg2 = undefined;
-    //     }
-    // }
-    // console.log(arg1, arg2, operator)
 }
 
 function handleDecimal() {
@@ -228,42 +180,6 @@ function handleDecimal() {
         populateDisplay(arg2);
     }
 } 
-
-    
-    // if (typeof arg1 === 'undefined') {
-    //     arg1 = '.';
-    //     populateDisplay(arg1);
-    // }
-    // else {
-    //     if (typeof operator === 'undefined') {
-    //        if (arg1.includes('.') || (arg1.length >= 9)) {
-    //            /* if arg1 is already 9 chars long, there is no room for 
-    //             a decimal point and another digit, so don't do anything.  Also,
-    //             if arg1 already has a decimal point, it can't accept another */
-    //            return;
-    //        }
-    //        else {
-    //            arg1 += '.';
-    //            populateDisplay(arg1);
-    //        } 
-    //     }
-    //     else {
-    //         if (typeof arg2 === 'undefined') {
-    //             arg2 = '.';
-    //             populateDisplay(arg2);
-    //         }
-    //         else {
-    //             if (arg2.includes('.') || (arg2.length >= 9)) {
-    //                 return;
-    //             }
-    //             else {
-    //                 arg2 += '.';
-    //                 populateDisplay(arg2);
-    //             }
-    //         } 
-    //     }
-    // }
-
 
 function handleEquals() {
     
@@ -316,7 +232,16 @@ function handleEquals() {
         repeatValue = undefined;
     }
     console.log({arg1, arg2, operator, result, repeatWithSameArgAndOperator, repeatValue});
+}
 
+function handleClear() {
+    arg1
+    arg2
+    operator
+    result
+    repeatWithSameArgAndOperator
+    repeatValue
+    
 }
 
 
