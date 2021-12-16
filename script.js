@@ -1,4 +1,4 @@
-let arg1;
+let arg1 = '0';
 let arg2;
 let operator;
 let result;
@@ -24,6 +24,8 @@ for (let btn of btns) {
     else if (btnValue === '=') btn.addEventListener('click', handleEquals);
     else if (btnValue === 'AC') btn.addEventListener('click', handleClear);
 }
+
+populateDisplay(arg1);
 
 function add(x, y) {
     return x + y;
@@ -125,7 +127,7 @@ function handleNumber(x) {
 }
 
 function handleOperator(newOp) {
-    if (typeof result !== 'undefined') {  //new
+    if (typeof result !== 'undefined') {  
         arg1 = result;
         result = undefined;
         operator = newOp;
@@ -235,13 +237,15 @@ function handleEquals() {
 }
 
 function handleClear() {
-    arg1
-    arg2
-    operator
-    result
-    repeatWithSameArgAndOperator
-    repeatValue
-    
+    console.log('fire');
+    arg2 = undefined;
+    operator = undefined;
+    result = undefined;
+    repeatWithSameArgAndOperator = undefined;
+    repeatValue = undefined;
+
+    arg1 = '0';
+    populateDisplay(arg1);
 }
 
 
