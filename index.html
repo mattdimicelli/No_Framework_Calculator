@@ -7,34 +7,76 @@
     <script src="./script.js" defer></script>
     <link rel="stylesheet" href="./reset.css">
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet"> 
     <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <title>Calculator</title>
     <style>
+        @font-face {
+            font-family: 'Digital';
+            src: url('./sf-digital-readout/SF\ Digital\ Readout\ Medium.ttf') format('truetype');
+        }
+        .calculator {
+            background-image: url('./calc-background.png');
+            background-size: auto auto;
+            background-repeat: no-repeat;
+            width: 440px;
+        }
         button {
-            border: 1px solid black;
             width: 50px;
+            font-family: 'Michroma', sans-serif;
+            font-weight: 600;
+            background-color: #edefda;
+            color: #46453d;
+            border: 2px solid #335263;
+            border-radius: 7px;
+            text-align: center;
+        }
+        .display {
+            font-family: 'Digital', monospace;
+            color: #5cf6b6;
+            background-color: hsl(155, 90%, 66%, 0.05);
+            font-size: 2rem;
+        }
+        .screen {
+            background-color: #313a25;
+            height: 140px;
+        }
+        .keyboard {
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
         }
     </style>
 </head>
 <body>
-    <div class="display"></div>
-    <button data-value="0">0</button>
-    <button data-value="1">1</button>
-    <button data-value="2">2</button>
-    <button data-value="3">3</button>
-    <button data-value="4">4</button>
-    <button data-value="5">5</button>
-    <button data-value="6">6</button>
-    <button data-value="7">7</button>
-    <button data-value="8">8</button>
-    <button data-value="9">9</button>
-    <button data-value=".">.</button>
-    <button data-value="+">+</button>
-    <button data-value="-">-</button>
-    <button data-value="*">×</button>
-    <button data-value="/">÷</button>
-    <button data-value="=">=</button>
-    <button data-value="AC">AC</button>
-    <button data-value="Backspace">←</button>
+    <div class="calculator">
+        <div class="screen">
+            <div class="display"></div>
+        </div>
+        <div class="keyboard">
+            <button data-value="0">0</button>
+            <button data-value="1">1</button>
+            <button data-value="2">2</button>
+            <button data-value="3">3</button>
+            <button data-value="4">4</button>
+            <button data-value="5">5</button>
+            <button data-value="6">6</button>
+            <button data-value="7">7</button>
+            <button data-value="8">8</button>
+            <button data-value="9">9</button>
+            <button data-value=".">.</button>
+            <button data-value="+">+</button>
+            <button data-value="-">-</button>
+            <button data-value="*">×</button>
+            <button data-value="/">÷</button>
+            <button data-value="=">=</button>
+            <button data-value="AC">AC</button>
+            <button data-value="Backspace">←</button>
+        </div>
+    </div>
+    
 </body>
 </html>
