@@ -9,33 +9,55 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet"> 
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Michroma&display=swap" rel="stylesheet"> 
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
     <title>Calculator</title>
     <style>
         @font-face {
             font-family: 'Digital';
             src: url('./sf-digital-readout/SF\ Digital\ Readout\ Medium.ttf') format('truetype');
         }
+        :root {
+            --whitish: #edefda;
+            --grayish: #46453d;
+            --border-blue: #335263;
+        }
+        body {
+            background-image: url(./wood-texture.png);
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
         .calculator {
             background-image: url('./calc-background.png');
             background-size: auto auto;
-            background-repeat: no-repeat;
             max-width: 360px;
             padding-bottom: 30px;
             padding-left: 15px;
             padding-right: 15px;
+            padding-top: 50px;
+            border: 5px solid var(--border-blue);
         }
         button {
             width: 50px;
             height: 50px;
             font-family: 'Michroma', Arial, sans-serif;
             font-weight: 600;
-            background-color: #edefda;
-            color: #46453d;
-            border: 2px solid #335263;
+            background-color: var(--whitish);
+            color: var(--grayish);
+            border: 2px solid var(--border-blue);
             border-radius: 7px;
             text-align: center;
+        }
+        button.active {
+            /* for when btn is activated via keyboard */
+            outline: 4px solid #335263;  
+        }
+        button:active {
+            outline: 4px solid #335263;
         }
         .display {
             font-family: 'Digital', monospace;
@@ -46,6 +68,36 @@
         .screen {
             background-color: #313a25;
             height: 140px;
+            margin-bottom: 10px;
+            padding-top: 25px;
+        }
+        .model {
+            background-color: var(--whitish);
+            border-radius: 7px 7px 15px 15px;
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+        }
+        .model-number {
+            color: var(--grayish);
+            font-weight: 900;
+            font-family: 'Michroma', Arial, sans-serif;
+            margin-left: 8px;
+            position: relative;
+            top: -2px;
+        }
+        .nice {
+            font-family: 'Audiowide', cursive;
+            margin-left: 12px;
+        }
+        .nice-logo {
+            width: 12.5%;
+        }
+        .screen-and-model {
+            background-color: #365b73;
+            padding: 20px;
+            border-radius: 30px;
+            border: 3px solid var(--border-blue);
         }
         .keyboard {
             display: grid;
@@ -55,14 +107,38 @@
             grid-gap: 10px;
             margin-top: 50px;
             width: 330px;
+            grid-template-areas: 'AC backspace divide times'
+                                 'seven eight nine minus'
+                                 'four five six plus'
+                                 'one two three equals'
+                                 'zero zero point equals';
         }
         .zero {
-            grid-column: 1/3;
+            grid-column: zero;
             width: 135px;
         }
+        .one { grid-area: one; }
+        .two { grid-area: two; }
+        .three { grid-area: three; }
+        .four { grid-area: four; }
+        .five { grid-area: five; }
+        .six { grid-area: six; }
+        .seven { grid-area: seven }
+        .eight { grid-area: eight; }
+        .nine { grid-area: nine; }
+        .point { grid-area: point; }
+        .AC { 
+            grid-area: AC;
+            background-color: #df3f29;
+            color: var(--whitish);
+        }
+        .divide { grid-area: divide; }
+        .times { grid-area: times; }
+        .plus { grid-area: plus; }
+        .minus { grid-area: minus; }
+        .backspace { grid-area: backspace; }
         .equals {
-            grid-row: -3 / -1;
-            grid-column: -2 / -1;
+            grid-area: equals;
             height: 100px;
             align-self: center;
             height: 110px;
@@ -77,31 +153,37 @@
     </style>
 </head>
 <body>
-    <div class="calculator">
-        <div class="screen">
-            <div class="display"></div>
+
+        <div class="calculator">
+            <div class="screen-and-model">
+                <div class="screen">
+                    <div class="display"></div>
+                </div>
+                <div class="model">
+                    <img class="nice-logo" src="./LOGO_NICE_RGB.jpg" alt="nice logo"><span class="nice">NICE </span><span class="model-number">8002</span>
+                </div>
+            </div>
+            <div class="keyboard">
+                <button class="zero" data-value="0">0</button>         
+                <button class="one" data-value="1">1</button>
+                <button class="two" data-value="2">2</button>
+                <button class="three" data-value="3">3</button>
+                <button class="four" data-value="4">4</button>
+                <button class="five" data-value="5">5</button>
+                <button class="six" data-value="6">6</button>
+                <button class="seven" data-value="7">7</button>
+                <button class="eight" data-value="8">8</button>
+                <button class="nine" data-value="9">9</button>
+                <button class="point" data-value=".">·</button>         
+                <button class="AC" data-value="AC">AC</button>
+                <button class="backspace" data-value="Backspace"><span class="arrow">←</span></button>
+                <button class="divide" data-value="/"><span class="divide">/</span></button>
+                <button class="times" data-value="*">×</button>
+                <button class="minus" data-value="-">-</button>
+                <button class="plus" data-value="+">+</button>
+                <button class="equals" data-value="=">=</button>
+            </div>
         </div>
-        <div class="keyboard">
-            <button data-value="AC">AC</button>
-            <button data-value="Backspace"><span class="arrow">←</span></button>
-            <button data-value="/"><span class="divide">/</span></button>
-            <button data-value="*">×</button>
-            <button data-value="7">7</button>
-            <button data-value="8">8</button>
-            <button data-value="9">9</button>
-            <button data-value="-">-</button>
-            <button data-value="4">4</button>
-            <button data-value="5">5</button>
-            <button data-value="6">6</button>
-            <button data-value="+">+</button>
-            <button data-value="1">1</button>
-            <button data-value="2">2</button>
-            <button data-value="3">3</button>
-            <button class="equals" data-value="=">=</button>
-            <button class="zero" data-value="0">0</button>         
-            <button data-value=".">·</button>         
-        </div>
-    </div>
-    
+
 </body>
 </html>
