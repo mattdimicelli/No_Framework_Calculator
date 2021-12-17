@@ -64,16 +64,16 @@
             
                     function modify(operand, value) {
                         if (operand === 1) {
-                            /* if arg1 is already 10 chars long, do nothing (to avoid storing
+                            /* if arg1 is already 20 chars long, do nothing (to avoid storing
                             numbers that are too long) */
-                            if(arg1.length === 10) return;
+                            if(arg1.length === 20) return;
                             else if(arg1 === '0') arg1 = value;
                             else arg1 += value; 
                         }
                         else if (operand === 2) {
-                            /* if arg2 is already 10 chars long, do nothing (to avoid storing
+                            /* if arg2 is already 20 chars long, do nothing (to avoid storing
                             numbers that are too long) */
-                            if(arg2.length === 10) return;
+                            if(arg2.length === 20) return;
                             else if(arg2 === '0') arg2 = value;
                             else arg2 += value;
                         }
@@ -118,8 +118,8 @@
                         populateDisplay(arg1);
                     }
                     else if (typeof operator === 'undefined') {
-                        if (arg1.includes('.') || (arg1.length >= 9)) {
-                            /* if arg1 is already 9 chars long, there is no room for 
+                        if (arg1.includes('.') || (arg1.length >= 19)) {
+                            /* if arg1 is already 19 chars long, there is no room for 
                             a decimal point and another digit, so don't do anything.  Also,
                             if arg1 already has a decimal point, it can't accept another */
                             return;
@@ -131,7 +131,7 @@
                         arg2 = '.';
                         populateDisplay(arg2);
                     }
-                    else if (arg2.includes('.') || (arg2.length >= 9)) {
+                    else if (arg2.includes('.') || (arg2.length >= 19)) {
                         return;
                     }
                     else {
@@ -306,23 +306,23 @@
 
     function populateDisplay(value) {
         const displayDiv = document.querySelector('div.display');
-        displayDiv.textContent = formatToMax10Chars(value);
+        displayDiv.textContent = formatToMax20Chars(value);
         
-        function formatToMax10Chars(str) {
-            if (str.length > 10 && ((Number(str) > 1e9))) {
+        function formatToMax20Chars(str) {
+            if (str.length > 20 && ((Number(str) > 1e19))) {
                 // if the number is huge, display it in scientific notation
-                str = Number(str).toExponential(4);
-                /* the scientific notation will show only 4 digits after the decimal
-                point, so that at the most, the result (string) will be a max of ten
-                characters long, such as 9999999999 * 9999999999 = '1.0000e+20' */
+                str = Number(str).toExponential(14);
+                /* the scientific notation will show only 14 digits after the decimal
+                point, so that at the most, the result (string) will be a max of twenty
+                characters long, such as 9.999999999989e+24 */
             }
-            else if (str.length > 10) {
+            else if (str.length > 20) {
                 // else, if the string is too long b/c the number has too many decimal
-                // places, reduce the string to 10 chars max
-                str = str.slice(0, 10);
+                // places, reduce the string to 20 chars max
+                str = str.slice(0, 20);
                 // but if that means that the last char would be a decimal point, 
                 // cut off that decimal point as well
-                if (str[9] === '.') str = str.slice(0,9);
+                if (str[19] === '.') str = str.slice(0,19);
             }
             return str;
         }
