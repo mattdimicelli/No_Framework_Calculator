@@ -21,7 +21,7 @@
             background-image: url('./calc-background.png');
             background-size: auto auto;
             background-repeat: no-repeat;
-            max-width: 440px;
+            max-width: 360px;
             padding-bottom: 30px;
             padding-left: 15px;
             padding-right: 15px;
@@ -29,7 +29,7 @@
         button {
             width: 50px;
             height: 50px;
-            font-family: 'Michroma', sans-serif;
+            font-family: 'Michroma', Arial, sans-serif;
             font-weight: 600;
             background-color: #edefda;
             color: #46453d;
@@ -54,6 +54,25 @@
             justify-items: center;
             grid-gap: 10px;
             margin-top: 50px;
+            width: 330px;
+        }
+        .zero {
+            grid-column: 1/3;
+            width: 135px;
+        }
+        .equals {
+            grid-row: -3 / -1;
+            grid-column: -2 / -1;
+            height: 100px;
+            align-self: center;
+            height: 110px;
+        }
+        .arrow {
+            /* arrow is not included in font set, so must apply 
+            some custom styles */
+            position: relative;
+            font-size: 31px;
+            top: -6px;
         }
     </style>
 </head>
@@ -63,24 +82,24 @@
             <div class="display"></div>
         </div>
         <div class="keyboard">
-            <button data-value="0">0</button>
-            <button data-value="1">1</button>
-            <button data-value="2">2</button>
-            <button data-value="3">3</button>
-            <button data-value="4">4</button>
-            <button data-value="5">5</button>
-            <button data-value="6">6</button>
+            <button data-value="AC">AC</button>
+            <button data-value="Backspace"><span class="arrow">←</span></button>
+            <button data-value="/"><span class="divide">/</span></button>
+            <button data-value="*">×</button>
             <button data-value="7">7</button>
             <button data-value="8">8</button>
             <button data-value="9">9</button>
-            <button data-value=".">.</button>
-            <button data-value="+">+</button>
             <button data-value="-">-</button>
-            <button data-value="*">×</button>
-            <button data-value="/">÷</button>
-            <button data-value="=">=</button>
-            <button data-value="AC">AC</button>
-            <button data-value="Backspace">←</button>
+            <button data-value="4">4</button>
+            <button data-value="5">5</button>
+            <button data-value="6">6</button>
+            <button data-value="+">+</button>
+            <button data-value="1">1</button>
+            <button data-value="2">2</button>
+            <button data-value="3">3</button>
+            <button class="equals" data-value="=">=</button>
+            <button class="zero" data-value="0">0</button>         
+            <button data-value=".">·</button>         
         </div>
     </div>
     
