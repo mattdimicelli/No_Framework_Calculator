@@ -1,6 +1,6 @@
 'use strict';
 
-(function initializeApplication() {
+(function applicationWrapper() {
 
     let arg1 = '0';
     let arg2;
@@ -10,9 +10,9 @@
     let repeatValue;
     let lastBtnPressWasNumberOrDecimalPoint = true;
 
-    start();
+    initializeApplication();
 
-    function start() {
+    function initializeApplication() {
         let btns = Array.from(document.querySelectorAll('button'));
         addClickEventListenersToButtons();
         populateDisplay(arg1);
