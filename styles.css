@@ -1,0 +1,147 @@
+@font-face {
+    font-family: 'Digital';
+    src: url('./sf-digital-readout/SF\ Digital\ Readout\ Medium.ttf') format('truetype');
+}
+:root {
+    --whitish: #edefda;
+    --grayish: #46453d;
+    --border-blue: #335263;
+}
+body {
+    background-image: url(./wood-texture.png);
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.calculator {
+    background-image: url('./calc-background.png');
+    background-size: auto auto;
+    max-width: 360px;
+    padding-bottom: 30px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 50px;
+    border: 5px solid var(--border-blue);
+}
+button {
+    width: 50px;
+    height: 50px;
+    font-family: 'Michroma', Arial, sans-serif;
+    font-weight: 600;
+    background-color: var(--whitish);
+    color: var(--grayish);
+    border: 2px solid var(--border-blue);
+    border-radius: 7px;
+    text-align: center;
+}
+button:hover {
+    background-color: rgb(92, 168, 255);
+}
+button.AC:hover {
+    background-color: red;
+}
+button.active {
+    /* for when btn is activated via keyboard */
+    outline: 4px solid #335263;  
+}
+button:active {
+    outline: 4px solid #335263;
+}
+.display {
+    font-family: 'Digital', monospace;
+    color: #5cf6b6;
+    background-color: hsl(155, 90%, 66%, 0.05);
+    font-size: 2rem;
+    padding: 7px 3px 3px 4px;
+    min-height: 35px;
+
+}
+.screen {
+    background-color: #313a25;
+    height: 140px;
+    margin-bottom: 10px;
+    padding-top: 25px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.model {
+    background-color: var(--whitish);
+    border-radius: 7px 7px 15px 15px;
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+}
+.model-number {
+    color: var(--grayish);
+    font-weight: 900;
+    font-family: 'Michroma', Arial, sans-serif;
+    margin-left: 8px;
+    position: relative;
+    top: -2px;
+}
+.nice {
+    font-family: 'Audiowide', cursive;
+    margin-left: 12px;
+}
+.nice-logo {
+    width: 12.5%;
+}
+.screen-and-model {
+    background-color: #365b73;
+    padding: 20px;
+    border-radius: 30px;
+    border: 3px solid var(--border-blue);
+}
+.keyboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+    justify-items: center;
+    grid-gap: 10px;
+    margin-top: 50px;
+    width: 330px;
+    grid-template-areas: 'AC backspace divide times'
+                         'seven eight nine minus'
+                         'four five six plus'
+                         'one two three equals'
+                         'zero zero point equals';
+}
+.zero {
+    grid-column: zero;
+    width: 135px;
+}
+.one { grid-area: one; }
+.two { grid-area: two; }
+.three { grid-area: three; }
+.four { grid-area: four; }
+.five { grid-area: five; }
+.six { grid-area: six; }
+.seven { grid-area: seven }
+.eight { grid-area: eight; }
+.nine { grid-area: nine; }
+.point { grid-area: point; }
+.AC { 
+    grid-area: AC;
+    background-color: #df3f29;
+    color: var(--whitish);
+}
+.divide { grid-area: divide; }
+.times { grid-area: times; }
+.plus { grid-area: plus; }
+.minus { grid-area: minus; }
+.backspace { grid-area: backspace; }
+.equals {
+    grid-area: equals;
+    height: 100px;
+    align-self: center;
+    height: 110px;
+}
+.arrow {
+    /* arrow is not included in font set, so must apply 
+    some custom styles */
+    position: relative;
+    font-size: 31px;
+    top: -6px;
+}
