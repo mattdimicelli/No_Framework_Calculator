@@ -27,8 +27,10 @@ The design requirements from The Odin Project to build a Calculator app are deta
 [here](https://www.theodinproject.com/paths/foundations/courses/foundations/lessons/calculator)
 
 ### Screenshot
+<p align="center">
+  <img src="./screenshot_for_readme.png" width="30%" height="30%">
+</p>
 
-![](./screenshot_for_readme.png)
 
 ### Links
 
