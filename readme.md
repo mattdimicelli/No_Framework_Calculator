@@ -1,16 +1,6 @@
 # Readme
 # NICE Calculator
 
-## Table of contents
-  - [Overview](#overview)
-    - [Challenge](#challenge) 
-    - [Screenshot](#screenshot)
-    - [Links](#links)
-  - [My process](#my-process)
-    - [Built with](#built-with)
-    - [What I learned](#what-i-learned)
-
-
 ## Overview
 
 A basic calculator app. It evaluates a single pair of operands at at time, but 
