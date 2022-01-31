@@ -24,7 +24,7 @@ The design requirements from The Odin Project to build a Calculator app are deta
 
 ### Links
 
-- [Live site](https://mattdimicelli.github.io/calculator2/)
+- [Live site](https://mattdimicelli.github.io/No_Framework_Calculator/)
 - [Repo](https://github.com/mattdimicelli/No_Framework_Calculator)
 
 ## My process
