@@ -6,8 +6,8 @@
 A basic calculator app. It evaluates a single pair of operands at at time, but 
 allows the user to operate on the result of the previous equation.  I decided to 
 do all of the "extra-credit" assignments for this project, so it also handles 
-floats, it has a backspace button and keyboard support, and I flexed my CSS skills
-to replicate an antique Sharp calculator from the 1970s.       
+floats, it has a backspace button and keyboard support, and I used CSS to craft a replica of an antique
+Sharp calculator from the 1970s.    
 
 P.S.: Try to find the "Easter Egg".  Hint: enter an equation that divides a number by *something*.....
 
